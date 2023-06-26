@@ -19,8 +19,7 @@ use App\Http\Controllers\UsersController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/registeruser',  [UsersController::class, 'register']);
-
-
+    Route::post('/loginuser',  [UsersController::class, 'login']);
 });
 
 Route::middleware('auth:api')->prefix('v1')->group(function() {
