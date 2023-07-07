@@ -67,13 +67,20 @@ class UsersController extends Controller
             'password' => 'required',
             'lat' => 'required',
             'long' => 'required',
+            'number_phone' => 'required'
+            'image'=>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'type' => 'required'
         ]);
-   
+        
+        $image_path = $request->file('image')->store('image', 'public');
+
+
+        dd($image_path);
+
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
 
-        // dd($validator);
    
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);

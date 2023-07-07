@@ -18,12 +18,14 @@ use App\Http\Controllers\UsersController;
 
 
 Route::prefix('v1')->group(function () {
-    Route::post('/registeruser',  [UsersController::class, 'register']);
+    Route::post('/register',  [UsersController::class, 'register']);
     Route::post('/loginuser',  [UsersController::class, 'login']);
 });
 
 Route::middleware('auth:api')->prefix('v1')->group(function() {
-    Route::get('/user', [UsersController::class, 'index']);
+    Route::get('/user', function(Request $request) {
+        return $request->user();
+    });
 
     // Route::post('/authors', [AuthorsController::class, 'store']);
     // //USE THE RESOURCE TYPE
