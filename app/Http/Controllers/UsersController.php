@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-use Auth;
+use  App\Http\Requests\StoreUserRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\Passport;
+use App\Models\User;
+
 
 class UsersController extends Controller
 {
@@ -59,37 +63,37 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function register(Request $request)
+    public function register(StoreUserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'lat' => 'required',
-            'long' => 'required',
-            'number_phone' => 'required'
-            'image'=>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'type' => 'required'
-        ]);
-        
-        $image_path = $request->file('image')->store('image', 'public');
 
+        try {
+            $userData = $request->validated();
+    
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
 
-        dd($image_path);
-
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+    
+                $image->storeAs('public/images', $imageName);
+    
+                $userData['image'] = $imageName;
+            }
+    
+            $userData['password'] = Hash::make($userData['password']);
+    
+            $user = User::create($userData);
+    
+            $client = $user->createToken('API Access');
+    
+            return response()->json([
+                'message' => 'Conta de usuário criada com sucesso',
+                'access_token' => $client->accessToken,
+                'user' => $user
+            ], 201);
+        } catch (\Exception $e) {
+            return response($e->getMessage(), 500);
         }
-
-   
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
-   
-        return $this->sendResponse($success, 'User register successfully.');
-
+        
     }
 
     /**
