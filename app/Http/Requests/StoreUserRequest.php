@@ -32,7 +32,6 @@ class StoreUserRequest extends FormRequest
             'number_phone' => 'required|string',
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'type' => 'required|string'        
-        
         ];
     }
 }

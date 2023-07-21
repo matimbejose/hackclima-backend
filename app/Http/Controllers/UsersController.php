@@ -7,6 +7,7 @@ use  App\Http\Requests\StoreUserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 
@@ -65,18 +66,32 @@ class UsersController extends Controller
      */
     public function register(StoreUserRequest $request)
     {
-
+    
         try {
             $userData = $request->validated();
     
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-
-                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
     
-                $image->storeAs('public/images', $imageName);
+                // Gera um nome único para o arquivo
+                $imageName = Str::random(40);
     
-                $userData['image'] = $imageName;
+                // Obtém a extensão com base no tipo MIME   
+                $extension = $image->getClientOriginalExtension();
+    
+                // Define o caminho completo da imagem original
+                $imagePath = public_path('images/'.$imageName.'.'.$extension);
+    
+                // Salva a imagem original no diretório public/images
+                $image->move(public_path('images'), $imageName.'.'.$extension);
+    
+                // Redimensiona a imagem para 96x80 utilizando a biblioteca Intervention Image
+                $resizedImage = Image::make($imagePath)->fit(96, 80);
+                $resizedImagePath = public_path('images/'.$imageName.'_resized.'.$extension);
+                $resizedImage->save($resizedImagePath);
+    
+                // Adiciona o caminho da imagem redimensionada aos dados do usuário
+                $userData['image'] = 'images/'.$imageName.'_resized.'.$extension;
             }
     
             $userData['password'] = Hash::make($userData['password']);
@@ -93,7 +108,6 @@ class UsersController extends Controller
         } catch (\Exception $e) {
             return response($e->getMessage(), 500);
         }
-        
     }
 
     /**
