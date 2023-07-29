@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Image;
 
 
 class UsersController extends Controller
@@ -47,8 +48,6 @@ class UsersController extends Controller
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
-
-
     /**
      * Display a listing of the resource.
      *
@@ -92,6 +91,9 @@ class UsersController extends Controller
     
                 // Adiciona o caminho da imagem redimensionada aos dados do usuário
                 $userData['image'] = 'images/'.$imageName.'_resized.'.$extension;
+
+
+                
             }
     
             $userData['password'] = Hash::make($userData['password']);
@@ -109,7 +111,6 @@ class UsersController extends Controller
             return response($e->getMessage(), 500);
         }
     }
-
     /**
      * Show the form for creating a new resource.
      *

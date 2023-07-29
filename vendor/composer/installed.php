@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b82597092579fc9176386be9cbb6ccf2ac49c969',
+        'reference' => '7e4f51da60d66f798fc37010cb3bb4d44c69f277',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -397,15 +397,6 @@
                 0 => 'v8.83.27',
             ),
         ),
-        'imagine/imagine' => array(
-            'pretty_version' => '1.3.5',
-            'version' => '1.3.5.0',
-            'reference' => '7151d553edec4dc2bbac60419f7a74ff34700e7f',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../imagine/imagine',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'intervention/image' => array(
             'pretty_version' => '2.7.2',
             'version' => '2.7.2.0',
@@ -433,7 +424,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b82597092579fc9176386be9cbb6ccf2ac49c969',
+            'reference' => '7e4f51da60d66f798fc37010cb3bb4d44c69f277',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
