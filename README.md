@@ -44,3 +44,19 @@ css
 Com base na saída que você forneceu, assumindo que o arquivo Dockerfile está localizado na pasta atual (que parece ser o caso), você pode executar o comando docker build da seguinte forma:
 
 `docker build -t api-app` .
+
+
+Para limpar essas imagens sem tag, você pode executar o seguinte comando:
+
+bash
+
+`sudo docker image prune`
+
+Esse comando removerá todas as imagens "dangling" e sem uso, liberando espaço em disco.
+
+Se você quiser limpar todas as imagens (incluindo as com tags) que não estão sendo usadas por nenhum contêiner, você pode executar:
+
+bash
+
+`sudo docker image prune -a`
+

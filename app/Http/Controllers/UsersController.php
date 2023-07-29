@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Str;
 use App\Models\User;
-use Image;
 
 
 class UsersController extends Controller
@@ -84,16 +83,9 @@ class UsersController extends Controller
                 // Salva a imagem original no diretório public/images
                 $image->move(public_path('images'), $imageName.'.'.$extension);
     
-                // Redimensiona a imagem para 96x80 utilizando a biblioteca Intervention Image
-                $resizedImage = Image::make($imagePath)->fit(96, 80);
-                $resizedImagePath = public_path('images/'.$imageName.'_resized.'.$extension);
-                $resizedImage->save($resizedImagePath);
-    
-                // Adiciona o caminho da imagem redimensionada aos dados do usuário
-                $userData['image'] = 'images/'.$imageName.'_resized.'.$extension;
+                // Adiciona o caminho da imagem
+                $userData['image'] = 'images/'.$imageName.'.'.$extension;
 
-
-                
             }
     
             $userData['password'] = Hash::make($userData['password']);
