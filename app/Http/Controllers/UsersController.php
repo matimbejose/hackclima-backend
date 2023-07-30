@@ -36,17 +36,38 @@ class UsersController extends Controller
 
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-            $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-            $success['name'] =  $user->name;
-   
-            return $this->sendResponse($success, 'User login successfully.');
-        } 
-        else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            $success['token'] = $user->createToken('MyApp')->accessToken;
+    
+            // Remova a senha do usuário da resposta
+            // unset($user->password);
+    
+            $response = [
+                'data' => [
+                    'user' => $user,
+                    'access_token' => $success['token']
+                ],
+                'message' => 'User login successfully.'
+            ];
+    
+            return response()->json($response, 200);
+        } else {
+            $response = [
+                'data' => null,
+                'message' => 'Unauthorised.'
+            ];
+            return response()->json($response, 401);
+        }
     }
+
+
+    public function logout() {
+        // Revoga o token de acesso atual do usuário
+        auth()->user()->tokens()->delete();
+        return response()->json(['message' => 'Logout successful.']);
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -96,8 +117,8 @@ class UsersController extends Controller
     
             return response()->json([
                 'message' => 'Conta de usuário criada com sucesso',
-                'access_token' => $client->accessToken,
-                'user' => $user
+                'user' => $user,
+                'access_token' =>  $client->accessToken,
             ], 201);
         } catch (\Exception $e) {
             return response($e->getMessage(), 500);

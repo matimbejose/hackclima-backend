@@ -60,3 +60,6 @@ bash
 
 `sudo docker image prune -a`
 
+
+Para todas as instâncias
+`docker stop $(docker ps -a -q)`
